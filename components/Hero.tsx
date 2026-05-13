@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from '@phosphor-icons/react'
 import LogoShape from '@/components/LogoShape'
+import Printer3D from '@/components/Printer3D'
 
 export default function Hero() {
   return (
@@ -145,6 +146,7 @@ export default function Hero() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 rounded-3xl blur-3xl"></div>
             <div className="relative h-full w-full perspective-1000">
+              <Printer3D />
             </div>
           </motion.div>
         </div>
