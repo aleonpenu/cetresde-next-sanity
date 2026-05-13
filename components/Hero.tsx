@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from '@phosphor-icons/react'
-import LogoShape from '@/components/LogoShape'
-import Printer3D from '@/components/Printer3D'
+// import LogoShape from '@/components/LogoShape'
+// import Printer3D from '@/components/Printer3D'
 
 export default function Hero() {
   return (
@@ -82,7 +82,7 @@ export default function Hero() {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="flex flex-col items-center lg:items-start gap-4 mb-8"
             >
-              <LogoShape className="h-36 md:h-40 lg:h-48 w-auto flex-shrink-0" />
+              {/* <LogoShape className="h-36 md:h-40 lg:h-48 w-auto flex-shrink-0" /> */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
                 CETRESDÉ
               </h1>
@@ -145,7 +145,7 @@ export default function Hero() {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 rounded-3xl blur-3xl"></div>
             <div className="relative h-full w-full perspective-1000">
-              <Printer3D />
+              {/* <Printer3D /> */}
             </div>
           </motion.div>
         </div>

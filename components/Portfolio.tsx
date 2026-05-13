@@ -5,7 +5,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { MagnifyingGlassPlus } from '@phosphor-icons/react'
-import nazarenoImg from '@/assets/images/nazareno.webp'
 
 interface PortfolioItem {
   id: number
@@ -31,7 +30,7 @@ const portfolioItems: PortfolioItem[] = [
     category: 'cofradias',
     description: 'Colección de figuras de nazarenos personalizadas con los colores de tu cofradía',
     material: 'Resina + Pintado Personalizado',
-    image: nazarenoImg
+    image: '/images/nazareno.webp'
   },
   {
     id: 3,
