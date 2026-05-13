@@ -4,44 +4,47 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.6%;
+    /* Tema rojo - cetresdé */
+    --background: 0 5% 97%;
+    --foreground: 0 5% 20%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.6%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 210 40% 96%;
-    --secondary: 264 89% 66%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 217 91% 60%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 217 91% 60%;
-    --radius: 0.5rem;
+    --card-foreground: 0 5% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 5% 20%;
+    --primary: 8 75% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 5 40% 30%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 3% 95%;
+    --muted-foreground: 0 3% 45%;
+    --accent: 15 70% 55%;
+    --accent-foreground: 0 5% 97%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 3% 89%;
+    --input: 0 3% 89%;
+    --ring: 8 75% 45%;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 0 0% 3.6%;
+    --background: 0 5% 10%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.6%;
+    --card: 0 5% 12%;
     --card-foreground: 0 0% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 217 33% 16%;
-    --secondary: 264 89% 66%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 217 33% 16%;
-    --muted-foreground: 215 14% 65%;
-    --accent: 217 91% 60%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 16%;
-    --input: 217 33% 16%;
-    --ring: 217 91% 60%;
+    --primary: 8 75% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 5 40% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 5% 18%;
+    --muted-foreground: 0 3% 65%;
+    --accent: 15 70% 55%;
+    --accent-foreground: 0 5% 97%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 5% 20%;
+    --input: 0 5% 20%;
+    --ring: 8 75% 50%;
   }
 
   * {
@@ -49,14 +52,17 @@
   }
 
   body {
-    @apply bg-white text-gray-900;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
   }
 
-  .dark body {
-    @apply bg-gray-950 text-gray-50;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold;
+  .animate-spin-slow {
+    animation: spin linear infinite;
   }
 }
