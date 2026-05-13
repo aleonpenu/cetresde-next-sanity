@@ -2,12 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-white text-gray-900;
-}
+@import './index.css';
+@import './theme.css';
 
-@media (prefers-color-scheme: dark) {
-  body {
-    @apply bg-gray-950 text-gray-50;
-  }
+body {
+  @apply bg-background text-foreground;
 }
