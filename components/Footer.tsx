@@ -1,74 +1,92 @@
-'use client'
-
-import Link from 'next/link'
-import { Mail } from 'lucide-react'
-
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
-
   return (
-    <footer className="bg-gray-900 dark:bg-black text-gray-300">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          {/* Empresa */}
+    <footer className="bg-[oklch(0.15_0_0)] text-white py-16 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            oklch(0.52 0.22 25) 2px,
+            oklch(0.52 0.22 25) 4px
+          )`
+        }} />
+      </div>
+      
+      <div className="container px-4 mx-auto relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">CETRESDÉ</h3>
-            <p className="text-sm text-gray-400">
-              Soluciones innovadoras en impresión 3D para tus proyectos más especiales.
+            <div className="h-20 mb-6 flex items-center">
+              <h3 className="text-4xl font-bold tracking-tight text-white">
+                ce<span className="text-[oklch(0.52_0.22_25)]">tres</span>dé
+              </h3>
+            </div>
+            <p className="text-white/70 leading-relaxed">
+              Transformamos tus ideas en realidad con tecnología de impresión 3D de última generación
             </p>
           </div>
 
-          {/* Servicios */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Servicios</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="hover:text-white transition">Impresión Personalizada</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Regalos Personalizados</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Prototipos 3D</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Producciones en Serie</Link></li>
+            <h4 className="font-semibold text-lg mb-6 text-[oklch(0.52_0.22_25)] tracking-wide">
+              Enlaces Rápidos
+            </h4>
+            <ul className="space-y-3 text-white/70">
+              <li>
+                <button 
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="hover:text-[oklch(0.52_0.22_25)] transition-colors duration-300 hover:translate-x-1 inline-block"
+                >
+                  Inicio
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="hover:text-[oklch(0.52_0.22_25)] transition-colors duration-300 hover:translate-x-1 inline-block"
+                >
+                  Portfolio
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="hover:text-[oklch(0.52_0.22_25)] transition-colors duration-300 hover:translate-x-1 inline-block"
+                >
+                  Contacto
+                </button>
+              </li>
             </ul>
           </div>
 
-          {/* Enlaces */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Enlaces</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="#" className="hover:text-white transition">Portafolio</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Sobre Nosotros</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Blog</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Contacto</Link></li>
+            <h4 className="font-semibold text-lg mb-6 text-[oklch(0.52_0.22_25)] tracking-wide">
+              Nuestros Servicios
+            </h4>
+            <ul className="space-y-3 text-white/70">
+              <li className="flex items-start gap-2">
+                <span className="text-[oklch(0.52_0.22_25)] mt-1">•</span>
+                <span>Impresión 3D Personalizada</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[oklch(0.52_0.22_25)] mt-1">•</span>
+                <span>Diseño 3D a Medida</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[oklch(0.52_0.22_25)] mt-1">•</span>
+                <span>Acabados Profesionales</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[oklch(0.52_0.22_25)] mt-1">•</span>
+                <span>Prototipado Rápido</span>
+              </li>
             </ul>
-          </div>
-
-          {/* Redes Sociales */}
-          <div>
-            <h4 className="text-white font-semibold mb-4">Síguenos</h4>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition text-sm font-bold">
-                f
-              </a>
-              <a href="#" className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition text-sm font-bold">
-                📷
-              </a>
-              <a href="#" className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition text-sm font-bold">
-                in
-              </a>
-              <a href="#" className="w-10 h-10 rounded-lg bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition">
-                <Mail className="w-5 h-5" />
-              </a>
-            </div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-            <p>&copy; {currentYear} CETRESDÉ. Todos los derechos reservados.</p>
-            <div className="flex gap-6 mt-4 md:mt-0">
-              <Link href="#" className="hover:text-white transition">Política de Privacidad</Link>
-              <Link href="#" className="hover:text-white transition">Términos de Uso</Link>
-            </div>
-          </div>
+        <div className="border-t border-[oklch(0.52_0.22_25)]/30 pt-8 text-center">
+          <p className="text-white/50 text-sm">
+            © 2024 <span className="text-[oklch(0.52_0.22_25)] font-semibold">cetresdé</span>. Todos los derechos reservados.
+          </p>
         </div>
       </div>
     </footer>

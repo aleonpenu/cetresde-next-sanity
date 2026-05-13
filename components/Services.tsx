@@ -1,74 +1,84 @@
-'use client'
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Printer, Gift, Lightbulb, Zap } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Card } from '@/components/ui/card'
+import { Cube, PaintBrush, SealCheck, Sparkle } from '@phosphor-icons/react'
 
 const services = [
   {
-    id: 1,
-    title: 'Impresión Personalizada',
-    description: 'Figuras y objetos únicos diseñados según tus especificaciones',
-    icon: Printer,
-    color: 'bg-blue-100 dark:bg-blue-900',
-    iconColor: 'text-blue-600 dark:text-blue-400',
+    icon: Cube,
+    title: 'Impresión 3D',
+    description: 'Tecnología de última generación para crear piezas únicas con precisión milimétrica y acabados profesionales'
   },
   {
-    id: 2,
-    title: 'Regalos Personalizados',
-    description: 'Regalos únicos para ocasiones especiales y celebraciones',
-    icon: Gift,
-    color: 'bg-purple-100 dark:bg-purple-900',
-    iconColor: 'text-purple-600 dark:text-purple-400',
+    icon: PaintBrush,
+    title: 'Diseño Personalizado',
+    description: 'Nuestro equipo convierte tus ideas en modelos 3D optimizados para una impresión perfecta'
   },
   {
-    id: 3,
-    title: 'Prototipos Rápidos',
-    description: 'Desarrolla tus ideas con prototipos en 3D de alta precisión',
-    icon: Lightbulb,
-    color: 'bg-yellow-100 dark:bg-yellow-900',
-    iconColor: 'text-yellow-600 dark:text-yellow-400',
+    icon: Sparkle,
+    title: 'Acabados Premium',
+    description: 'Pintado, lijado y tratamiento de superficies para un resultado profesional y duradero'
   },
   {
-    id: 4,
-    title: 'Producciones en Serie',
-    description: 'Fabricación escalable para proyectos comerciales',
-    icon: Zap,
-    color: 'bg-pink-100 dark:bg-pink-900',
-    iconColor: 'text-pink-600 dark:text-pink-400',
-  },
+    icon: SealCheck,
+    title: 'Calidad Garantizada',
+    description: 'Materiales certificados y control de calidad en cada fase del proceso de producción'
+  }
 ]
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15
+    }
+  }
+}
+
+const item = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0 }
+}
 
 export default function Services() {
   return (
-    <section className="py-20 px-4 bg-white dark:bg-gray-950">
-      <div className="container mx-auto max-w-6xl">
+    <section className="py-20 md:py-32 bg-gradient-to-b from-background to-muted/30">
+      <div className="container px-4 mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
             Nuestros Servicios
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Soluciones completas de impresión 3D para empresas, eventos y proyectos personales
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            De la idea al producto final, te acompañamos en cada paso del proceso
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {services.map((service) => {
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+        >
+          {services.map((service, index) => {
             const Icon = service.icon
             return (
-              <Card key={service.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}>
-                    <Icon className={`w-6 h-6 ${service.iconColor}`} />
+              <motion.div key={index} variants={item}>
+                <Card className="p-6 h-full hover:shadow-xl transition-all duration-300 hover:scale-105 hover:border-accent/50 group">
+                  <div className="mb-4 inline-flex p-4 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl group-hover:from-primary/20 group-hover:to-accent/20 transition-colors">
+                    <Icon size={32} weight="duotone" className="text-primary group-hover:text-accent transition-colors" />
                   </div>
-                  <CardTitle>{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base">{service.description}</CardDescription>
-                </CardContent>
-              </Card>
+                  <h3 className="text-xl font-semibold mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {service.description}
+                  </p>
+                </Card>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
