@@ -2,9 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './index.css';
-@import './theme.css';
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.6%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 210 40% 96%;
+  --secondary: 264 89% 66%;
+  --secondary-foreground: 210 40% 96%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 217 91% 60%;
+  --accent-foreground: 210 40% 96%;
+  --border: 214 32% 91%;
+  --ring: 217 91% 60%;
+}
 
-body {
-  @apply bg-background text-foreground;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 0 0% 3.6%;
+    --foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 217 33% 16%;
+    --secondary: 264 89% 66%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 217 33% 16%;
+    --muted-foreground: 215 14% 65%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 210 40% 96%;
+    --border: 217 33% 16%;
+    --ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
