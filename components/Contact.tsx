@@ -21,6 +21,8 @@ interface SiteConfig {
   whyChooseUs: string[]
 }
 
+type SiteConfigResponse = Partial<SiteConfig> | null
+
 const fallbackConfig: SiteConfig = {
   email: 'info@caprichoazahar.es',
   phone: '+34 123 456 789',
@@ -47,10 +49,23 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [config, setConfig] = useState<SiteConfig>(fallbackConfig)
 
+  const normalizeConfig = (data: SiteConfigResponse): SiteConfig => ({
+    email: data?.email || fallbackConfig.email,
+    phone: data?.phone || fallbackConfig.phone,
+    businessHours: Array.isArray(data?.businessHours)
+      ? data.businessHours
+      : fallbackConfig.businessHours,
+    whyChooseUs: Array.isArray(data?.whyChooseUs)
+      ? data.whyChooseUs
+      : fallbackConfig.whyChooseUs,
+  })
+
   useEffect(() => {
     client
-      .fetch<SiteConfig>(`*[_type == "siteConfig"][0]{ email, phone, businessHours, whyChooseUs }`)
-      .then((data) => { if (data) setConfig(data) })
+      .fetch<SiteConfigResponse>(`*[_type == "siteConfig"][0]{ email, phone, businessHours, whyChooseUs }`)
+      .then((data) => {
+        setConfig(normalizeConfig(data))
+      })
       .catch(() => {})
   }, [])
 
