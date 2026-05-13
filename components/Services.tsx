@@ -1,3 +1,5 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import { Card } from '@/components/ui/card'
 import { Cube, PaintBrush, SealCheck, Sparkle } from '@phosphor-icons/react'
