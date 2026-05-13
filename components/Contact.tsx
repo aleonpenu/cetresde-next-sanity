@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,6 +12,26 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { EnvelopeSimple, Phone, PaperPlaneTilt } from '@phosphor-icons/react'
+import { client } from '@/sanity/lib/client'
+
+interface SiteConfig {
+  email: string
+  phone: string
+  businessHours: string[]
+  whyChooseUs: string[]
+}
+
+const fallbackConfig: SiteConfig = {
+  email: 'info@caprichoazahar.es',
+  phone: '+34 123 456 789',
+  businessHours: ['Lunes a Viernes: 9:00 - 18:00', 'Sábados: 10:00 - 14:00'],
+  whyChooseUs: [
+    'Diseños 100% personalizados',
+    'Materiales de alta calidad',
+    'Entrega rápida en toda España',
+    'Asesoramiento personalizado',
+  ],
+}
 
 const formSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -25,6 +45,14 @@ type FormData = z.infer<typeof formSchema>
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [config, setConfig] = useState<SiteConfig>(fallbackConfig)
+
+  useEffect(() => {
+    client
+      .fetch<SiteConfig>(`*[_type == "siteConfig"][0]{ email, phone, businessHours, whyChooseUs }`)
+      .then((data) => { if (data) setConfig(data) })
+      .catch(() => {})
+  }, [])
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -82,7 +110,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Email</p>
-                      <p className="font-semibold">info@caprichoazahar.es</p>
+                      <p className="font-semibold">{config.email}</p>
                     </div>
                   </Card>
 
@@ -92,7 +120,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Teléfono</p>
-                      <p className="font-semibold">+34 123 456 789</p>
+                      <p className="font-semibold">{config.phone}</p>
                     </div>
                   </Card>
                 </div>
@@ -101,30 +129,21 @@ export default function Contact() {
               <div>
                 <h4 className="font-semibold text-lg mb-3">Horario de Atención</h4>
                 <p className="text-muted-foreground">
-                  Lunes a Viernes: 9:00 - 18:00<br />
-                  Sábados: 10:00 - 14:00
+                  {config.businessHours.map((line, i) => (
+                    <span key={i}>{line}{i < config.businessHours.length - 1 && <br />}</span>
+                  ))}
                 </p>
               </div>
 
               <div>
                 <h4 className="font-semibold text-lg mb-3">¿Por qué elegirnos?</h4>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">✓</span>
-                    <span>Diseños 100% personalizados</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">✓</span>
-                    <span>Materiales de alta calidad</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">✓</span>
-                    <span>Entrega rápida en toda España</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">✓</span>
-                    <span>Asesoramiento personalizado</span>
-                  </li>
+                  {config.whyChooseUs.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="text-primary mt-1">✓</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
