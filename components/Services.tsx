@@ -1,30 +1,30 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Card } from '@/components/ui/card'
-import { Cube, PaintBrush, SealCheck, Sparkle } from '@phosphor-icons/react'
+import { Cube, PaintBrush, SealCheck, Sparkle, type Icon as PhosphorIcon } from '@phosphor-icons/react'
+import { client } from '@/sanity/lib/client'
 
-const services = [
-  {
-    icon: Cube,
-    title: 'Impresión 3D',
-    description: 'Tecnología de última generación para crear piezas únicas con precisión milimétrica y acabados profesionales'
-  },
-  {
-    icon: PaintBrush,
-    title: 'Diseño Personalizado',
-    description: 'Nuestro equipo convierte tus ideas en modelos 3D optimizados para una impresión perfecta'
-  },
-  {
-    icon: Sparkle,
-    title: 'Acabados Premium',
-    description: 'Pintado, lijado y tratamiento de superficies para un resultado profesional y duradero'
-  },
-  {
-    icon: SealCheck,
-    title: 'Calidad Garantizada',
-    description: 'Materiales certificados y control de calidad en cada fase del proceso de producción'
-  }
+interface SanityService {
+  _id: string
+  title: string
+  description: string
+  icon: string
+}
+
+const iconMap: Record<string, PhosphorIcon> = {
+  Cube,
+  PaintBrush,
+  SealCheck,
+  Sparkle,
+}
+
+const fallbackServices = [
+  { _id: '1', icon: 'Cube', title: 'Impresión 3D', description: 'Tecnología de última generación para crear piezas únicas con precisión milimétrica y acabados profesionales' },
+  { _id: '2', icon: 'PaintBrush', title: 'Diseño Personalizado', description: 'Nuestro equipo convierte tus ideas en modelos 3D optimizados para una impresión perfecta' },
+  { _id: '3', icon: 'Sparkle', title: 'Acabados Premium', description: 'Pintado, lijado y tratamiento de superficies para un resultado profesional y duradero' },
+  { _id: '4', icon: 'SealCheck', title: 'Calidad Garantizada', description: 'Materiales certificados y control de calidad en cada fase del proceso de producción' },
 ]
 
 const container = {
@@ -43,6 +43,15 @@ const item = {
 }
 
 export default function Services() {
+  const [services, setServices] = useState<SanityService[]>(fallbackServices)
+
+  useEffect(() => {
+    client
+      .fetch<SanityService[]>(`*[_type == "service"] | order(_createdAt asc) { _id, title, description, icon }`)
+      .then((data) => { if (data?.length) setServices(data) })
+      .catch(() => {}) // usa fallback si falla
+  }, [])
+
   return (
     <section className="py-20 md:py-32 bg-gradient-to-b from-background to-muted/30">
       <div className="container px-4 mx-auto">
@@ -63,9 +72,9 @@ export default function Services() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
         >
           {services.map((service, index) => {
-            const Icon = service.icon
+            const Icon = iconMap[service.icon] ?? Cube
             return (
-              <motion.div key={index} variants={item}>
+              <motion.div key={service._id} variants={item}>
                 <Card className="p-6 h-full hover:shadow-xl transition-all duration-300 hover:scale-105 hover:border-accent/50 group">
                   <div className="mb-4 inline-flex p-4 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl group-hover:from-primary/20 group-hover:to-accent/20 transition-colors">
                     <Icon size={32} weight="duotone" className="text-primary group-hover:text-accent transition-colors" />
