@@ -82,7 +82,9 @@ export default function Hero() {
     const subscription = client
       .listen<Partial<HeroConfig>>(QUERY, {}, { visibility: 'query' })
       .subscribe((update) => {
-        if (update.result) applyData(update.result)
+        if ('result' in update && update.result) {
+          applyData(update.result)
+        }
       })
 
     return () => subscription.unsubscribe()
