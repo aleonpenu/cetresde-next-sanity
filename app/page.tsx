@@ -17,7 +17,9 @@ interface IntroConfig {
   durationMs: number
 }
 
-type IntroConfigResponse = Partial<IntroConfig> | null
+interface SiteConfigResponse {
+  introOverlay?: Partial<IntroConfig>
+}
 
 const fallbackIntroConfig: IntroConfig = {
   enabled: false,
@@ -34,7 +36,7 @@ export default function Home() {
   useEffect(() => {
     const loadIntroConfig = async () => {
       try {
-        const data = await client.fetch<IntroConfigResponse>(
+        const data = await client.fetch<SiteConfigResponse>(
           `*[_type == "siteConfig"][0]{
             "introOverlay": introOverlay {
               enabled,
