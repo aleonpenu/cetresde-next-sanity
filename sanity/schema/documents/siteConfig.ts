@@ -109,5 +109,44 @@ export const siteConfigType = defineType({
       type: 'string',
       description: 'Ej: © 2026 cetresdé. Todos los derechos reservados.',
     },
+    {
+      name: 'introOverlay',
+      title: 'Intro Overlay (Landing VFX)',
+      type: 'object',
+      fields: [
+        {
+          name: 'enabled',
+          title: 'Activar intro',
+          type: 'boolean',
+          initialValue: true,
+          description: 'Muestra el overlay al cargar la página (solo una vez por sesión)',
+        },
+        {
+          name: 'imageSrc',
+          title: 'Imagen (ruta en /public)',
+          type: 'string',
+          description: 'Ej: /intro/intro-landing.webp',
+        },
+        {
+          name: 'title',
+          title: 'Título',
+          type: 'string',
+          description: 'Ej: Capricho Azahar 3D',
+        },
+        {
+          name: 'subtitle',
+          title: 'Subtítulo',
+          type: 'string',
+          description: 'Ej: Donde las ideas toman forma',
+        },
+        {
+          name: 'durationMs',
+          title: 'Duración (ms)',
+          type: 'number',
+          initialValue: 4500,
+          description: 'Tiempo que se muestra la intro antes de cerrar automáticamente',
+        },
+      ],
+    },
   ],
 })
