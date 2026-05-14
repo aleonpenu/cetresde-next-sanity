@@ -1,11 +1,74 @@
 'use client'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from '@phosphor-icons/react'
 import LogoShape from '@/components/LogoShape'
 import Printer3D from '@/components/Printer3D'
+import { client } from '@/sanity/lib/client'
+
+interface HeroConfig {
+  heroTitle: string
+  heroSubtitle: string
+  heroDescription: string
+  heroPrimaryCtaText: string
+  heroPrimaryCtaTarget: string
+  heroSecondaryCtaText: string
+  heroSecondaryCtaTarget: string
+}
+
+type HeroConfigResponse = Partial<HeroConfig> | null
+
+const fallbackHeroConfig: HeroConfig = {
+  heroTitle: 'CETRESDÉ',
+  heroSubtitle: 'Impresión 3D personalizada para tus momentos especiales',
+  heroDescription:
+    'Desde cofradías de Semana Santa hasta fiestas infantiles, transformamos tus ideas en realidad con tecnología de impresión 3D de última generación',
+  heroPrimaryCtaText: 'Solicitar Presupuesto',
+  heroPrimaryCtaTarget: 'contact',
+  heroSecondaryCtaText: 'Ver Portfolio',
+  heroSecondaryCtaTarget: 'portfolio',
+}
 
 export default function Hero() {
+  const [config, setConfig] = useState<HeroConfig>(fallbackHeroConfig)
+
+  useEffect(() => {
+    client
+      .fetch<HeroConfigResponse>(`*[_type == "siteConfig"][0]{
+        heroTitle,
+        heroSubtitle,
+        heroDescription,
+        heroPrimaryCtaText,
+        heroPrimaryCtaTarget,
+        heroSecondaryCtaText,
+        heroSecondaryCtaTarget
+      }`)
+      .then((data) => {
+        if (!data) return
+        setConfig({
+          heroTitle: data.heroTitle || fallbackHeroConfig.heroTitle,
+          heroSubtitle: data.heroSubtitle || fallbackHeroConfig.heroSubtitle,
+          heroDescription: data.heroDescription || fallbackHeroConfig.heroDescription,
+          heroPrimaryCtaText: data.heroPrimaryCtaText || fallbackHeroConfig.heroPrimaryCtaText,
+          heroPrimaryCtaTarget: data.heroPrimaryCtaTarget || fallbackHeroConfig.heroPrimaryCtaTarget,
+          heroSecondaryCtaText:
+            data.heroSecondaryCtaText || fallbackHeroConfig.heroSecondaryCtaText,
+          heroSecondaryCtaTarget:
+            data.heroSecondaryCtaTarget || fallbackHeroConfig.heroSecondaryCtaTarget,
+        })
+      })
+      .catch(() => {})
+  }, [])
+
+  const scrollToTarget = (targetId: string) => {
+    if (targetId === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-muted to-accent/5">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(65,120,220,0.08),transparent_50%),radial-gradient(circle_at_70%_50%,rgba(50,180,220,0.08),transparent_50%)]"></div>
@@ -85,7 +148,7 @@ export default function Hero() {
             >
               <LogoShape className="h-36 md:h-40 lg:h-48 w-auto flex-shrink-0" />
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                CETRESDÉ
+                {config.heroTitle}
               </h1>
             </motion.div>
 
@@ -95,7 +158,7 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
               className="text-lg md:text-xl text-muted-foreground mb-6"
             >
-              Impresión 3D personalizada para tus momentos especiales
+              {config.heroSubtitle}
             </motion.p>
 
             <motion.p
@@ -104,7 +167,7 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
               className="text-sm md:text-base text-foreground/70 mb-8"
             >
-              Desde cofradías de Semana Santa hasta fiestas infantiles, transformamos tus ideas en realidad con tecnología de impresión 3D de última generación
+              {config.heroDescription}
             </motion.p>
 
             <motion.div
@@ -120,9 +183,9 @@ export default function Hero() {
                 <Button 
                   size="lg" 
                   className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-semibold tracking-wide shadow-lg hover:shadow-xl transition-all"
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => scrollToTarget(config.heroPrimaryCtaTarget)}
                 >
-                  Solicitar Presupuesto
+                  {config.heroPrimaryCtaText}
                   <ArrowRight className="ml-2" weight="bold" />
                 </Button>
               </motion.div>
@@ -131,9 +194,9 @@ export default function Hero() {
                 size="lg" 
                 variant="outline"
                 className="border-2 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-8 py-6 text-lg font-semibold tracking-wide transition-all"
-                onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => scrollToTarget(config.heroSecondaryCtaTarget)}
               >
-                Ver Portfolio
+                {config.heroSecondaryCtaText}
               </Button>
             </motion.div>
           </div>
