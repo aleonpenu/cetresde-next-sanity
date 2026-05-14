@@ -181,12 +181,14 @@ function StaticImageBackground({ imageSrc, overlayOpacity = 60 }: { imageSrc: st
 
 // ─── Export principal ─────────────────────────────────────────────────────────
 export default function HeroBackground({ type = 'geometric', imageSrc, overlayOpacity }: HeroBackgroundProps) {
+  const resolvedType = type === 'static-image' && !imageSrc ? 'geometric' : type
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {type === 'geometric' && <GeometricBackground />}
-      {type === 'particles' && <ParticlesBackground />}
-      {type === 'waves' && <WavesBackground />}
-      {type === 'static-image' && imageSrc && (
+      {resolvedType === 'geometric' && <GeometricBackground />}
+      {resolvedType === 'particles' && <ParticlesBackground />}
+      {resolvedType === 'waves' && <WavesBackground />}
+      {resolvedType === 'static-image' && imageSrc && (
         <StaticImageBackground imageSrc={imageSrc} overlayOpacity={overlayOpacity} />
       )}
     </div>
