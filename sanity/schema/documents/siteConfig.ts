@@ -90,12 +90,28 @@ export const siteConfigType = defineType({
       group: 'hero',
       options: {
         list: [
-          { title: '⬡ Geométrico — hexágonos y cubos 3D (defecto)', value: 'geometric' },
-          { title: '✦ Partículas — puntos flotantes minimalistas', value: 'particles' },
-          { title: '〰 Ondas — capas de ondas animadas', value: 'waves' },
-          { title: '🖼 Imagen estática', value: 'static-image' },
+          {
+            title: '⬡ Geométrico',
+            value: 'geometric',
+            description: 'Hexágonos, cubos 3D rotantes, cuadrados y puntos pulsantes. Defecto.',
+          },
+          {
+            title: '✦ Partículas',
+            value: 'particles',
+            description: 'Puntos flotantes minimalistas con movimiento suave y gradiente sutil.',
+          },
+          {
+            title: '〰 Ondas',
+            value: 'waves',
+            description: 'Capas animadas de ondas SVG deslizándose, efecto marino.',
+          },
+          {
+            title: '🖼 Imagen estática',
+            value: 'static-image',
+            description: 'Tu propia imagen con overlay oscuro (%). Requiere URL en campo siguiente.',
+          },
         ],
-        layout: 'radio',
+        layout: 'dropdown',
       },
       initialValue: 'geometric',
     },
