@@ -84,6 +84,41 @@ export const siteConfigType = defineType({
       group: 'hero',
     },
     {
+      name: 'heroBackgroundType',
+      title: 'Hero - Tipo de fondo',
+      type: 'string',
+      group: 'hero',
+      options: {
+        list: [
+          { title: '⬡ Geométrico — hexágonos y cubos 3D (defecto)', value: 'geometric' },
+          { title: '✦ Partículas — puntos flotantes minimalistas', value: 'particles' },
+          { title: '〰 Ondas — capas de ondas animadas', value: 'waves' },
+          { title: '🖼 Imagen estática', value: 'static-image' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'geometric',
+    },
+    {
+      name: 'heroBackgroundImage',
+      title: 'Hero - URL de imagen de fondo',
+      type: 'string',
+      description: 'Solo si el tipo de fondo es "Imagen estática". Ruta pública (/images/...) o URL externa.',
+      group: 'hero',
+      hidden: ({ document }: { document?: Record<string, unknown> }) => document?.heroBackgroundType !== 'static-image',
+    },
+    {
+      name: 'heroBackgroundOverlay',
+      title: 'Hero - Opacidad del overlay oscuro (%)',
+      type: 'number',
+      description: 'Solo para imagen estática. 0 = sin overlay, 100 = negro total. Recomendado: 50-70.',
+      group: 'hero',
+      initialValue: 60,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      validation: (Rule: any) => Rule.min(0).max(100),
+      hidden: ({ document }: { document?: Record<string, unknown> }) => document?.heroBackgroundType !== 'static-image',
+    },
+    {
       name: 'footerBrandTitle',
       title: 'Footer - Título marca',
       type: 'string',

@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import HeroBackground, { HeroBackgroundType } from '@/components/HeroBackground'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from '@phosphor-icons/react'
@@ -15,6 +16,9 @@ interface HeroConfig {
   heroPrimaryCtaTarget: string
   heroSecondaryCtaText: string
   heroSecondaryCtaTarget: string
+  heroBackgroundType: HeroBackgroundType
+  heroBackgroundImage: string
+  heroBackgroundOverlay: number
 }
 
 type HeroConfigResponse = Partial<HeroConfig> | null
@@ -28,6 +32,9 @@ const fallbackHeroConfig: HeroConfig = {
   heroPrimaryCtaTarget: 'contact',
   heroSecondaryCtaText: 'Ver Portfolio',
   heroSecondaryCtaTarget: 'portfolio',
+  heroBackgroundType: 'geometric',
+  heroBackgroundImage: '',
+  heroBackgroundOverlay: 60,
 }
 
 export default function Hero() {
@@ -42,7 +49,10 @@ export default function Hero() {
         heroPrimaryCtaText,
         heroPrimaryCtaTarget,
         heroSecondaryCtaText,
-        heroSecondaryCtaTarget
+        heroSecondaryCtaTarget,
+        heroBackgroundType,
+        heroBackgroundImage,
+        heroBackgroundOverlay
       }`)
       .then((data) => {
         if (!data) return
@@ -56,6 +66,10 @@ export default function Hero() {
             data.heroSecondaryCtaText || fallbackHeroConfig.heroSecondaryCtaText,
           heroSecondaryCtaTarget:
             data.heroSecondaryCtaTarget || fallbackHeroConfig.heroSecondaryCtaTarget,
+          heroBackgroundType:
+            (data.heroBackgroundType as HeroBackgroundType) || fallbackHeroConfig.heroBackgroundType,
+          heroBackgroundImage: data.heroBackgroundImage || fallbackHeroConfig.heroBackgroundImage,
+          heroBackgroundOverlay: data.heroBackgroundOverlay ?? fallbackHeroConfig.heroBackgroundOverlay,
         })
       })
       .catch(() => {})
@@ -71,71 +85,11 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-muted to-accent/5">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(65,120,220,0.08),transparent_50%),radial-gradient(circle_at_70%_50%,rgba(50,180,220,0.08),transparent_50%)]"></div>
-      
-      <div className="absolute inset-0 opacity-60">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(65,120,220,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(65,120,220,0.08)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-      </div>
-
-      <div className="absolute inset-0 opacity-40">
-        <div className="absolute top-[10%] left-[5%] w-40 h-40 border-2 border-primary/40 rounded-lg transform rotate-45 animate-spin-slow" style={{ animationDuration: '20s' }}></div>
-        <div className="absolute top-[60%] right-[8%] w-32 h-32 border-2 border-accent/40 rounded-lg transform -rotate-12 animate-spin-slow" style={{ animationDuration: '25s' }}></div>
-        <div className="absolute bottom-[20%] left-[15%] w-24 h-24 border-2 border-secondary/40 rounded-lg transform rotate-12 animate-spin-slow" style={{ animationDuration: '30s' }}></div>
-      </div>
-
-      <div className="absolute inset-0">
-        <div className="absolute top-[15%] right-[10%] w-3 h-3 bg-primary/70 rounded-full animate-pulse"></div>
-        <div className="absolute top-[45%] left-[8%] w-2.5 h-2.5 bg-accent/70 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-        <div className="absolute bottom-[30%] right-[20%] w-3 h-3 bg-secondary/70 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-[70%] left-[25%] w-2.5 h-2.5 bg-primary/70 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-        <div className="absolute top-[25%] left-[40%] w-2 h-2 bg-accent/70 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-[50%] right-[35%] w-2 h-2 bg-primary/60 rounded-full animate-pulse" style={{ animationDelay: '2.5s' }}></div>
-        <div className="absolute top-[35%] right-[45%] w-2.5 h-2.5 bg-secondary/60 rounded-full animate-pulse" style={{ animationDelay: '3s' }}></div>
-      </div>
-
-      <svg className="absolute inset-0 w-full h-full opacity-25" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="hexagons" x="0" y="0" width="100" height="87" patternUnits="userSpaceOnUse">
-            <path d="M50 0 L93.3 25 L93.3 62 L50 87 L6.7 62 L6.7 25 Z" fill="none" stroke="rgba(65,120,220,0.5)" strokeWidth="1.5"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#hexagons)" />
-      </svg>
-
-      <motion.div 
-        className="absolute top-[20%] left-[12%] w-48 h-48 opacity-12"
-        animate={{ 
-          rotateY: [0, 360],
-          rotateX: [0, 360]
-        }}
-        transition={{ 
-          duration: 30, 
-          repeat: Infinity, 
-          ease: "linear" 
-        }}
-      >
-        <div className="w-full h-full border-2 border-primary/60 relative">
-          <div className="absolute top-0 left-0 w-full h-full border-2 border-accent/50 transform translate-x-2 translate-y-2"></div>
-          <div className="absolute top-0 left-0 w-full h-full border-2 border-secondary/40 transform translate-x-4 translate-y-4"></div>
-        </div>
-      </motion.div>
-
-      <motion.div 
-        className="absolute bottom-[25%] right-[15%] w-40 h-40 opacity-12"
-        animate={{ 
-          rotate: 360
-        }}
-        transition={{ 
-          duration: 40, 
-          repeat: Infinity, 
-          ease: "linear" 
-        }}
-      >
-        <div className="w-full h-full relative">
-          <div className="absolute inset-0 border-t-2 border-l-2 border-primary/60 rounded-tl-3xl"></div>
-          <div className="absolute inset-0 border-b-2 border-r-2 border-accent/50 rounded-br-3xl"></div>
-        </div>
-      </motion.div>
+      <HeroBackground
+        type={config.heroBackgroundType}
+        imageSrc={config.heroBackgroundImage || undefined}
+        overlayOpacity={config.heroBackgroundOverlay}
+      />
       
       <div className="container relative z-10 px-4 py-12 md:py-20 mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
