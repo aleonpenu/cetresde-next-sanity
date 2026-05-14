@@ -40,39 +40,53 @@ const fallbackHeroConfig: HeroConfig = {
 export default function Hero() {
   const [config, setConfig] = useState<HeroConfig>(fallbackHeroConfig)
 
+  const QUERY = `*[_type == "siteConfig" && _id in ["siteConfig", "drafts.siteConfig"]] | order(_updatedAt desc) [0]{
+    heroTitle,
+    heroSubtitle,
+    heroDescription,
+    heroPrimaryCtaText,
+    heroPrimaryCtaTarget,
+    heroSecondaryCtaText,
+    heroSecondaryCtaTarget,
+    heroBackgroundType,
+    heroBackgroundImage,
+    heroBackgroundOverlay
+  }`
+
+  const VALID_BG_TYPES: HeroBackgroundType[] = ['geometric', 'particles', 'waves', 'static-image']
+
+  const applyData = (data: HeroConfigResponse) => {
+    if (!data) return
+    const bgType = VALID_BG_TYPES.includes(data.heroBackgroundType as HeroBackgroundType)
+      ? (data.heroBackgroundType as HeroBackgroundType)
+      : fallbackHeroConfig.heroBackgroundType
+    setConfig({
+      heroTitle: data.heroTitle || fallbackHeroConfig.heroTitle,
+      heroSubtitle: data.heroSubtitle || fallbackHeroConfig.heroSubtitle,
+      heroDescription: data.heroDescription || fallbackHeroConfig.heroDescription,
+      heroPrimaryCtaText: data.heroPrimaryCtaText || fallbackHeroConfig.heroPrimaryCtaText,
+      heroPrimaryCtaTarget: data.heroPrimaryCtaTarget || fallbackHeroConfig.heroPrimaryCtaTarget,
+      heroSecondaryCtaText: data.heroSecondaryCtaText || fallbackHeroConfig.heroSecondaryCtaText,
+      heroSecondaryCtaTarget: data.heroSecondaryCtaTarget || fallbackHeroConfig.heroSecondaryCtaTarget,
+      heroBackgroundType: bgType,
+      heroBackgroundImage: data.heroBackgroundImage || fallbackHeroConfig.heroBackgroundImage,
+      heroBackgroundOverlay: data.heroBackgroundOverlay ?? fallbackHeroConfig.heroBackgroundOverlay,
+    })
+  }
+
   useEffect(() => {
-    client
-      .fetch<HeroConfigResponse>(`*[_type == "siteConfig" && _id == "siteConfig"][0]{
-        heroTitle,
-        heroSubtitle,
-        heroDescription,
-        heroPrimaryCtaText,
-        heroPrimaryCtaTarget,
-        heroSecondaryCtaText,
-        heroSecondaryCtaTarget,
-        heroBackgroundType,
-        heroBackgroundImage,
-        heroBackgroundOverlay
-      }`)
-      .then((data) => {
-        if (!data) return
-        setConfig({
-          heroTitle: data.heroTitle || fallbackHeroConfig.heroTitle,
-          heroSubtitle: data.heroSubtitle || fallbackHeroConfig.heroSubtitle,
-          heroDescription: data.heroDescription || fallbackHeroConfig.heroDescription,
-          heroPrimaryCtaText: data.heroPrimaryCtaText || fallbackHeroConfig.heroPrimaryCtaText,
-          heroPrimaryCtaTarget: data.heroPrimaryCtaTarget || fallbackHeroConfig.heroPrimaryCtaTarget,
-          heroSecondaryCtaText:
-            data.heroSecondaryCtaText || fallbackHeroConfig.heroSecondaryCtaText,
-          heroSecondaryCtaTarget:
-            data.heroSecondaryCtaTarget || fallbackHeroConfig.heroSecondaryCtaTarget,
-          heroBackgroundType:
-            (data.heroBackgroundType as HeroBackgroundType) || fallbackHeroConfig.heroBackgroundType,
-          heroBackgroundImage: data.heroBackgroundImage || fallbackHeroConfig.heroBackgroundImage,
-          heroBackgroundOverlay: data.heroBackgroundOverlay ?? fallbackHeroConfig.heroBackgroundOverlay,
-        })
+    // Carga inicial
+    client.fetch<HeroConfigResponse>(QUERY).then(applyData).catch(() => {})
+
+    // Suscripción en tiempo real — detecta publicaciones y cambios en Studio
+    const subscription = client
+      .listen<Partial<HeroConfig>>(QUERY, {}, { visibility: 'query' })
+      .subscribe((update) => {
+        if (update.result) applyData(update.result)
       })
-      .catch(() => {})
+
+    return () => subscription.unsubscribe()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const scrollToTarget = (targetId: string) => {
