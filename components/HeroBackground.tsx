@@ -133,26 +133,57 @@ function ParticlesBackground() {
 function WavesBackground() {
   return (
     <>
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-accent/5" />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-accent/5 to-secondary/15" />
+      <div className="absolute inset-0 opacity-35 bg-[linear-gradient(90deg,rgba(65,120,220,0.18)_1px,transparent_1px)] bg-[size:42px_42px]" />
+
       {[
-        { fill: 'rgba(65,120,220,0.07)', d: 'M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z', duration: 8, y: '75%' },
-        { fill: 'rgba(50,180,220,0.06)', d: 'M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,261.3C672,277,768,267,864,240C960,213,1056,171,1152,165.3C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z', duration: 12, y: '80%' },
-        { fill: 'rgba(100,80,220,0.05)', d: 'M0,160L48,181.3C96,203,192,245,288,245.3C384,245,480,203,576,192C672,181,768,203,864,224C960,245,1056,267,1152,261.3C1248,256,1344,224,1392,208L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z', duration: 16, y: '85%' },
+        {
+          fill: 'rgba(65,120,220,0.22)',
+          stroke: 'rgba(65,120,220,0.65)',
+          d: 'M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L0,320Z',
+          duration: 12,
+          bottom: '0%',
+          height: '48%',
+          drift: -90,
+        },
+        {
+          fill: 'rgba(50,180,220,0.20)',
+          stroke: 'rgba(50,180,220,0.62)',
+          d: 'M0,256L48,240C96,224,192,192,288,197.3C384,203,480,245,576,261.3C672,277,768,267,864,240C960,213,1056,171,1152,165.3C1248,160,1344,192,1392,208L1440,224L1440,320L0,320Z',
+          duration: 16,
+          bottom: '0%',
+          height: '42%',
+          drift: -70,
+        },
+        {
+          fill: 'rgba(120,100,220,0.16)',
+          stroke: 'rgba(120,100,220,0.55)',
+          d: 'M0,160L48,181.3C96,203,192,245,288,245.3C384,245,480,203,576,192C672,181,768,203,864,224C960,245,1056,267,1152,261.3C1248,256,1344,224,1392,208L1440,192L1440,320L0,320Z',
+          duration: 20,
+          bottom: '0%',
+          height: '36%',
+          drift: -50,
+        },
       ].map((wave, i) => (
         <motion.div
           key={i}
-          className="absolute left-0 right-0 bottom-0"
-          style={{ top: wave.y }}
-          animate={{ x: [0, -50, 0] }}
+          className="absolute left-0 right-0"
+          style={{ bottom: wave.bottom, height: wave.height }}
+          animate={{ x: [0, wave.drift, 0] }}
           transition={{ duration: wave.duration, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" className="w-[200%]" preserveAspectRatio="none">
-            <path fill={wave.fill} d={wave.d} />
+          <svg
+            viewBox="0 0 1440 320"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-[200%] h-full"
+            preserveAspectRatio="none"
+          >
+            <path fill={wave.fill} stroke={wave.stroke} strokeWidth="2" d={wave.d} />
           </svg>
         </motion.div>
       ))}
-      {/* Efecto de brillo superior */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/5 rounded-full blur-3xl" />
+
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[640px] h-[320px] bg-primary/15 rounded-full blur-3xl" />
     </>
   )
 }
