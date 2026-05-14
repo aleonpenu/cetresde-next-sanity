@@ -35,7 +35,7 @@ export default function Hero() {
 
   useEffect(() => {
     client
-      .fetch<HeroConfigResponse>(`*[_type == "siteConfig"][0]{
+      .fetch<HeroConfigResponse>(`*[_type == "siteConfig" && _id == "siteConfig"][0]{
         heroTitle,
         heroSubtitle,
         heroDescription,

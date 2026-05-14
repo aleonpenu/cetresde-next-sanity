@@ -14,6 +14,8 @@ type IntroOverlayProps = {
   subtitle?: string
   /** Ruta de la imagen en /public */
   imageSrc: string
+  /** Modo de encuadre de imagen */
+  imageDisplayMode?: 'cinematic' | 'contain' | 'cover'
 }
 
 function usePrefersReducedMotion() {
@@ -36,6 +38,7 @@ export default function IntroOverlay({
   title = 'Capricho Azahar 3D',
   subtitle = 'Donde las ideas toman forma',
   imageSrc,
+  imageDisplayMode = 'cinematic',
 }: IntroOverlayProps) {
   const prefersReducedMotion = usePrefersReducedMotion()
 
@@ -111,6 +114,9 @@ export default function IntroOverlay({
         ? 'opacity-100'
         : 'opacity-0'
 
+  const showCoverBackground = imageDisplayMode === 'cinematic' || imageDisplayMode === 'cover'
+  const showContainedImage = imageDisplayMode === 'cinematic' || imageDisplayMode === 'contain'
+
   return (
     <div
       role="dialog"
@@ -120,24 +126,48 @@ export default function IntroOverlay({
     >
       {/* Fondo imagen */}
       <div className="absolute inset-0 overflow-hidden">
-        <Image
-          src={imageSrc}
-          alt="Intro landing sobre impresión 3D"
-          fill
-          priority
-          className={[
-            'object-cover',
-            prefersReducedMotion ? '' : 'intro-zoom',
-            phase === 'exit' ? 'intro-blur' : '',
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        />
+        {showCoverBackground && (
+          <Image
+            src={imageSrc}
+            alt="Intro landing sobre impresión 3D"
+            fill
+            priority
+            className={[
+              'object-cover',
+              imageDisplayMode === 'cover' ? 'opacity-100 scale-100' : 'scale-105 opacity-55',
+              prefersReducedMotion ? '' : 'intro-zoom',
+              phase === 'exit' ? 'intro-blur' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+          />
+        )}
 
         {/* Overlay para legibilidad + cine */}
         <div className="absolute inset-0 bg-black/35" />
         <div className="absolute inset-0 intro-vignette" />
       </div>
+
+      {/* Imagen principal completa */}
+      {showContainedImage && (
+        <div className="absolute inset-0 flex items-center justify-center px-4 py-10 sm:px-8 sm:py-12 pointer-events-none">
+          <div className="relative h-full w-full max-w-7xl">
+            <Image
+              src={imageSrc}
+              alt="Escena de introducción sobre impresión 3D"
+              fill
+              priority
+              className={[
+                'object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.55)]',
+                prefersReducedMotion ? '' : 'intro-float',
+                phase === 'exit' ? 'intro-blur' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Branding (sutil) */}
       <div className="absolute inset-0 flex items-center justify-center px-6">

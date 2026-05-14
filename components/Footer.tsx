@@ -41,7 +41,7 @@ export default function Footer() {
 
   useEffect(() => {
     client
-      .fetch<FooterConfigResponse>(`*[_type == "siteConfig"][0]{
+      .fetch<FooterConfigResponse>(`*[_type == "siteConfig" && _id == "siteConfig"][0]{
         footerBrandTitle,
         footerDescription,
         footerQuickLinks,

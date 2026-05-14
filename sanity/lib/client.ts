@@ -5,7 +5,8 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  // Disable CDN in development to reflect Studio changes immediately on localhost.
+  useCdn: process.env.NODE_ENV === 'production',
 })
 
 export async function sanityFetch<T>({
