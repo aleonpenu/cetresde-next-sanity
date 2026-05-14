@@ -66,3 +66,70 @@
     animation: spin linear infinite;
   }
 }
+
+/* Intro Overlay Animations */
+
+/* Zoom lento "cinematográfico" */
+.intro-zoom {
+  animation: introZoom 6s ease-out forwards;
+  transform: scale(1.06);
+}
+
+@keyframes introZoom {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1.00);
+  }
+}
+
+/* Vignette suave para sensación "escena" */
+.intro-vignette {
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.35) 55%,
+    rgba(0, 0, 0, 0.60) 100%
+  );
+}
+
+/* Glow sutil del título */
+.intro-glow {
+  text-shadow:
+    0 0 14px rgba(255, 255, 255, 0.15),
+    0 0 42px rgba(255, 255, 255, 0.10);
+}
+
+.intro-float {
+  animation: introFloat 5.5s ease-in-out infinite;
+}
+
+@keyframes introFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Blur al salir (solo en exit) */
+.intro-blur {
+  filter: blur(2px);
+  transition: filter 700ms ease;
+}
+
+/* Respeto a accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .intro-zoom {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .intro-float {
+    animation: none !important;
+    transform: none !important;
+  }
+}

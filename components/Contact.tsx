@@ -62,7 +62,9 @@ export default function Contact() {
 
   useEffect(() => {
     client
-      .fetch<SiteConfigResponse>(`*[_type == "siteConfig"][0]{ email, phone, businessHours, whyChooseUs }`)
+      .fetch<SiteConfigResponse>(
+        `*[_type == "siteConfig" && _id == "siteConfig"][0]{ email, phone, businessHours, whyChooseUs }`
+      )
       .then((data) => {
         setConfig(normalizeConfig(data))
       })

@@ -28,6 +28,10 @@ export default function RootLayout({
       lang="es"
       className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
+      <head>
+        {/* Preload intro image to avoid flashing */}
+        <link rel="preload" as="image" href="/intro/intro-landing.webp" />
+      </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>{children}</ThemeProvider>
       </body>

@@ -4,6 +4,11 @@ export const themeConfigType = defineType({
   name: 'themeConfig',
   title: 'Configuración de Tema',
   type: 'document',
+  groups: [
+    { name: 'general', title: 'General', default: true },
+    { name: 'colors', title: 'Colores' },
+    { name: 'typography', title: 'Tipografía' },
+  ],
   fields: [
     defineField({
       name: 'name',
@@ -11,6 +16,7 @@ export const themeConfigType = defineType({
       type: 'string',
       description: 'Ej: "Tema Principal", "Oscuro", etc.',
       validation: (Rule) => Rule.required(),
+      group: 'general',
     }),
     defineField({
       name: 'isActive',
@@ -18,11 +24,13 @@ export const themeConfigType = defineType({
       type: 'boolean',
       description: 'Solo un tema puede estar activo',
       initialValue: false,
+      group: 'general',
     }),
     defineField({
       name: 'colors',
       title: 'Colores',
       type: 'object',
+      group: 'colors',
       fields: [
         defineField({
           name: 'primary',
@@ -117,6 +125,7 @@ export const themeConfigType = defineType({
       name: 'typography',
       title: 'Tipografía',
       type: 'object',
+      group: 'typography',
       fields: [
         defineField({
           name: 'borderRadius',
