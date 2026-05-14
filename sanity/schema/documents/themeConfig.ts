@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+// color type is registered via sanity-plugin-color-input in sanity.config.ts
 
 export const themeConfigType = defineType({
   name: 'themeConfig',
@@ -32,93 +33,21 @@ export const themeConfigType = defineType({
       type: 'object',
       group: 'colors',
       fields: [
-        defineField({
-          name: 'primary',
-          title: 'Color Primario',
-          type: 'string',
-          description: 'Formato: "H S% L%" (ej: "8 75% 45%")',
-        }),
-        defineField({
-          name: 'primaryForeground',
-          title: 'Primario - Texto',
-          type: 'string',
-          description: 'Formato: "H S% L%" (ej: "0 0% 100%")',
-        }),
-        defineField({
-          name: 'secondary',
-          title: 'Color Secundario',
-          type: 'string',
-        }),
-        defineField({
-          name: 'secondaryForeground',
-          title: 'Secundario - Texto',
-          type: 'string',
-        }),
-        defineField({
-          name: 'accent',
-          title: 'Color Acentuado',
-          type: 'string',
-        }),
-        defineField({
-          name: 'accentForeground',
-          title: 'Acentuado - Texto',
-          type: 'string',
-        }),
-        defineField({
-          name: 'background',
-          title: 'Fondo',
-          type: 'string',
-        }),
-        defineField({
-          name: 'foreground',
-          title: 'Texto Principal',
-          type: 'string',
-        }),
-        defineField({
-          name: 'card',
-          title: 'Fondo Tarjetas',
-          type: 'string',
-        }),
-        defineField({
-          name: 'cardForeground',
-          title: 'Tarjetas - Texto',
-          type: 'string',
-        }),
-        defineField({
-          name: 'muted',
-          title: 'Muted (Desactivado)',
-          type: 'string',
-        }),
-        defineField({
-          name: 'mutedForeground',
-          title: 'Muted - Texto',
-          type: 'string',
-        }),
-        defineField({
-          name: 'destructive',
-          title: 'Destructivo (Error)',
-          type: 'string',
-        }),
-        defineField({
-          name: 'destructiveForeground',
-          title: 'Destructivo - Texto',
-          type: 'string',
-        }),
-        defineField({
-          name: 'border',
-          title: 'Bordes',
-          type: 'string',
-        }),
-        defineField({
-          name: 'input',
-          title: 'Inputs',
-          type: 'string',
-        }),
-        defineField({
-          name: 'ring',
-          title: 'Ring (Focus)',
-          type: 'string',
-        }),
+        defineField({ name: 'primary', title: 'Color Primario', type: 'color' }),
+        defineField({ name: 'primaryForeground', title: 'Primario - Texto', type: 'color' }),
+        defineField({ name: 'secondary', title: 'Color Secundario', type: 'color' }),
+        defineField({ name: 'secondaryForeground', title: 'Secundario - Texto', type: 'color' }),
+        defineField({ name: 'accent', title: 'Color Acentuado', type: 'color' }),
+        defineField({ name: 'accentForeground', title: 'Acentuado - Texto', type: 'color' }),
+        defineField({ name: 'background', title: 'Fondo', type: 'color' }),
+        defineField({ name: 'foreground', title: 'Texto Principal', type: 'color' }),
+        defineField({ name: 'card', title: 'Fondo Tarjetas', type: 'color' }),
+        defineField({ name: 'cardForeground', title: 'Tarjetas - Texto', type: 'color' }),
+        defineField({ name: 'muted', title: 'Muted (Desactivado)', type: 'color' }),
+        defineField({ name: 'mutedForeground', title: 'Muted - Texto', type: 'color' }),
+        defineField({ name: 'destructive', title: 'Destructivo (Error)', type: 'color' }),
+        defineField({ name: 'border', title: 'Bordes', type: 'color' }),
+        defineField({ name: 'ring', title: 'Ring (Focus)', type: 'color' }),
       ],
     }),
     defineField({
@@ -128,16 +57,40 @@ export const themeConfigType = defineType({
       group: 'typography',
       fields: [
         defineField({
-          name: 'borderRadius',
-          title: 'Border Radius (px)',
+          name: 'fontFamily',
+          title: 'Fuente Principal',
           type: 'string',
-          description: 'Ej: "0.75rem" o "12px"',
+          options: {
+            list: [
+              { title: 'Inter — moderna sans-serif', value: 'Inter, sans-serif' },
+              { title: 'Geist — minimalista (defecto)', value: 'Geist, sans-serif' },
+              { title: 'Roboto — neutra y legible', value: 'Roboto, sans-serif' },
+              { title: 'Poppins — geométrica amigable', value: 'Poppins, sans-serif' },
+              { title: 'Montserrat — elegante display', value: 'Montserrat, sans-serif' },
+              { title: 'Raleway — refined display', value: 'Raleway, sans-serif' },
+              { title: 'Space Grotesk — técnica moderna', value: 'Space Grotesk, sans-serif' },
+              { title: 'DM Sans — limpia editorial', value: 'DM Sans, sans-serif' },
+              { title: 'Merriweather — serif clásica', value: 'Merriweather, serif' },
+              { title: 'Playfair Display — serif elegante', value: 'Playfair Display, serif' },
+            ],
+            layout: 'radio',
+          },
         }),
         defineField({
-          name: 'fontFamily',
-          title: 'Font Family',
+          name: 'borderRadius',
+          title: 'Redondez de esquinas',
           type: 'string',
-          description: 'Ej: "Inter, sans-serif"',
+          options: {
+            list: [
+              { title: 'Cuadrado (0px)', value: '0rem' },
+              { title: 'Sutil (4px)', value: '0.25rem' },
+              { title: 'Normal (8px)', value: '0.5rem' },
+              { title: 'Redondeado (12px)', value: '0.75rem' },
+              { title: 'Muy redondeado (16px)', value: '1rem' },
+              { title: 'Píldora (9999px)', value: '9999px' },
+            ],
+            layout: 'radio',
+          },
         }),
       ],
     }),

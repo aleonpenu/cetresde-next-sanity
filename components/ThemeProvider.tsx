@@ -3,61 +3,49 @@
 import { useEffect, useState } from 'react'
 import { client } from '@/sanity/lib/client'
 
+// Shape returned by sanity-plugin-color-input
+interface SanityColor {
+  hex?: string
+  alpha?: number
+  hsl?: { h: number; s: number; l: number; a?: number }
+}
+
+interface ThemeColors {
+  primary?: SanityColor
+  primaryForeground?: SanityColor
+  secondary?: SanityColor
+  secondaryForeground?: SanityColor
+  accent?: SanityColor
+  accentForeground?: SanityColor
+  background?: SanityColor
+  foreground?: SanityColor
+  card?: SanityColor
+  cardForeground?: SanityColor
+  muted?: SanityColor
+  mutedForeground?: SanityColor
+  destructive?: SanityColor
+  border?: SanityColor
+  ring?: SanityColor
+}
+
 interface ThemeConfig {
   name: string
-  colors?: {
-    primary?: string
-    primaryForeground?: string
-    secondary?: string
-    secondaryForeground?: string
-    accent?: string
-    accentForeground?: string
-    background?: string
-    foreground?: string
-    card?: string
-    cardForeground?: string
-    muted?: string
-    mutedForeground?: string
-    destructive?: string
-    destructiveForeground?: string
-    border?: string
-    input?: string
-    ring?: string
-  }
+  colors?: ThemeColors
   typography?: {
     borderRadius?: string
     fontFamily?: string
   }
 }
 
-const defaultTheme: ThemeConfig = {
-  name: 'default',
-  colors: {
-    primary: '8 75% 45%',
-    primaryForeground: '0 0% 100%',
-    secondary: '5 40% 30%',
-    secondaryForeground: '0 0% 100%',
-    accent: '15 70% 55%',
-    accentForeground: '0 5% 97%',
-    background: '0 5% 97%',
-    foreground: '0 5% 20%',
-    card: '0 0% 100%',
-    cardForeground: '0 5% 20%',
-    muted: '0 3% 95%',
-    mutedForeground: '0 3% 45%',
-    destructive: '0 84% 60%',
-    destructiveForeground: '0 0% 100%',
-    border: '0 3% 89%',
-    input: '0 3% 89%',
-    ring: '8 75% 45%',
-  },
-  typography: {
-    borderRadius: '0.75rem',
-  },
+/** Convert a SanityColor object to the "H S% L%" string Tailwind CSS vars expect */
+function toHsl(color: SanityColor | undefined): string | null {
+  if (!color?.hsl) return null
+  const { h, s, l } = color.hsl
+  return `${Math.round(h)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<ThemeConfig>(defaultTheme)
+  const [theme, setTheme] = useState<ThemeConfig | null>(null)
 
   useEffect(() => {
     const loadTheme = async () => {
@@ -69,30 +57,47 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
             typography
           }`
         )
-        if (activeTheme) {
-          setTheme({ ...defaultTheme, ...activeTheme })
-        }
+        if (activeTheme) setTheme(activeTheme)
       } catch (err) {
         console.warn('Failed to load theme from Sanity, using default', err)
       }
     }
-
     loadTheme()
   }, [])
 
-  // Inyectar variables CSS dinámicamente
   useEffect(() => {
+    if (!theme) return
     const root = document.documentElement
+
     if (theme.colors) {
-      Object.entries(theme.colors).forEach(([key, value]) => {
-        if (value) {
-          const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`
-          root.style.setProperty(cssVar, value)
-        }
-      })
+      const map: Record<keyof ThemeColors, string> = {
+        primary: '--primary',
+        primaryForeground: '--primary-foreground',
+        secondary: '--secondary',
+        secondaryForeground: '--secondary-foreground',
+        accent: '--accent',
+        accentForeground: '--accent-foreground',
+        background: '--background',
+        foreground: '--foreground',
+        card: '--card',
+        cardForeground: '--card-foreground',
+        muted: '--muted',
+        mutedForeground: '--muted-foreground',
+        destructive: '--destructive',
+        border: '--border',
+        ring: '--ring',
+      }
+      for (const [key, cssVar] of Object.entries(map) as [keyof ThemeColors, string][]) {
+        const hsl = toHsl(theme.colors[key])
+        if (hsl) root.style.setProperty(cssVar, hsl)
+      }
     }
+
     if (theme.typography?.borderRadius) {
       root.style.setProperty('--radius', theme.typography.borderRadius)
+    }
+    if (theme.typography?.fontFamily) {
+      root.style.setProperty('--font-sans', theme.typography.fontFamily)
     }
   }, [theme])
 

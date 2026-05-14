@@ -131,6 +131,7 @@ export default function IntroOverlay({
             src={imageSrc}
             alt="Intro landing sobre impresión 3D"
             fill
+            sizes="100vw"
             priority
             className={[
               'object-cover',
@@ -156,6 +157,7 @@ export default function IntroOverlay({
               src={imageSrc}
               alt="Escena de introducción sobre impresión 3D"
               fill
+              sizes="100vw"
               priority
               className={[
                 'object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.55)]',
