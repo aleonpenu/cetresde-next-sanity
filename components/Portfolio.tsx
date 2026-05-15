@@ -16,10 +16,16 @@ interface PortfolioItem {
   _id: string
   title: string
   category: string
+  categoryTitle?: string
   description: string
   material: string
   image: string | object
   isSanity?: boolean
+}
+
+interface CategoryTab {
+  value: string
+  label: string
 }
 
 const fallbackItems: PortfolioItem[] = [
@@ -33,7 +39,7 @@ const fallbackItems: PortfolioItem[] = [
   { _id: '8', title: 'Organizadores Personalizados', category: 'regalos', description: 'Soluciones de almacenamiento diseñadas a medida para cualquier espacio', material: 'PETG Duradero', image: 'https://images.unsplash.com/photo-1586769852836-bc069f19e1b6?w=800&q=80' },
 ]
 
-const categories = [
+const fallbackCategories: CategoryTab[] = [
   { value: 'todos', label: 'Todos' },
   { value: 'cofradias', label: 'Cofradías' },
   { value: 'fiestas', label: 'Fiestas Infantiles' },
@@ -58,21 +64,89 @@ const item = {
 
 export default function Portfolio() {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>(fallbackItems)
+  const [categories, setCategories] = useState<CategoryTab[]>(fallbackCategories)
   const [activeCategory, setActiveCategory] = useState('todos')
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null)
 
   useEffect(() => {
-    client
-      .fetch<Array<{ _id: string; title: string; category: string; description: string; material: string; image: object }>>(
-        `*[_type == "portfolioItem"] | order(order asc) { _id, title, category, description, material, image }`
-      )
-      .then((data) => {
-        if (data?.length) {
-          setPortfolioItems(data.map((d) => ({ ...d, isSanity: true })))
+    Promise.all([
+      client.fetch<
+        Array<{
+          _id: string
+          title: string
+          categorySlug: string
+          categoryTitle?: string
+          description: string
+          material: string
+          image: object
+        }>
+      >(
+        `*[_type == "portfolioItem"] | order(order asc) {
+          _id,
+          title,
+          "categorySlug": coalesce(category->slug.current, category),
+          "categoryTitle": coalesce(category->title, category),
+          description,
+          material,
+          image
+        }`
+      ),
+      client.fetch<Array<{ _id: string; title: string; slug: { current: string } }>>(
+        `*[_type == "category" && section == "portfolio"] | order(order asc, title asc) {
+          _id,
+          title,
+          slug
+        }`
+      ),
+    ])
+      .then(([itemsData, categoriesData]) => {
+        if (itemsData?.length) {
+          setPortfolioItems(
+            itemsData.map((d) => ({
+              _id: d._id,
+              title: d.title,
+              category: d.categorySlug,
+              categoryTitle: d.categoryTitle,
+              description: d.description,
+              material: d.material,
+              image: d.image,
+              isSanity: true,
+            }))
+          )
+        }
+
+        if (categoriesData?.length) {
+          setCategories([
+            { value: 'todos', label: 'Todos' },
+            ...categoriesData
+              .filter((c) => !!c.slug?.current)
+              .map((c) => ({ value: c.slug.current, label: c.title })),
+          ])
+        } else if (itemsData?.length) {
+          const uniqueFromItems = Array.from(
+            new Map(
+              itemsData
+                .filter((i) => !!i.categorySlug)
+                .map((i) => [
+                  i.categorySlug,
+                  {
+                    value: i.categorySlug,
+                    label: i.categoryTitle || i.categorySlug,
+                  },
+                ])
+            ).values()
+          )
+          setCategories([{ value: 'todos', label: 'Todos' }, ...uniqueFromItems])
         }
       })
       .catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (!categories.some((c) => c.value === activeCategory)) {
+      setActiveCategory('todos')
+    }
+  }, [activeCategory, categories])
 
   const getImageUrl = (item: PortfolioItem) =>
     item.isSanity ? urlFor(item.image as object) : (item.image as string)
@@ -90,12 +164,12 @@ export default function Portfolio() {
         </div>
 
         <Tabs value={activeCategory} onValueChange={setActiveCategory} className="mb-12">
-          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-5 h-auto gap-2 bg-muted/50 p-2">
+          <TabsList className="flex flex-wrap w-full max-w-4xl mx-auto h-auto gap-2 bg-muted/50 p-2 justify-center">
             {categories.map((cat) => (
               <TabsTrigger 
                 key={cat.value} 
                 value={cat.value}
-                className="text-xs md:text-sm py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+                className="text-xs md:text-sm py-2 px-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
               >
                 {cat.label}
               </TabsTrigger>

@@ -14,14 +14,13 @@ export const portfolioItemType = defineType({
     {
       name: 'category',
       title: 'Categoría',
-      type: 'string',
+      type: 'reference',
+      to: [{ type: 'category' }],
       options: {
-        list: [
-          { title: 'Cofradías', value: 'cofradias' },
-          { title: 'Fiestas', value: 'fiestas' },
-          { title: 'Merchandising', value: 'merchandising' },
-          { title: 'Industrial', value: 'industrial' },
-        ],
+        filter: 'section == $section',
+        filterParams: {
+          section: 'portfolio',
+        },
       },
       validation: (Rule) => Rule.required(),
     },
@@ -60,7 +59,7 @@ export const portfolioItemType = defineType({
   preview: {
     select: {
       title: 'title',
-      subtitle: 'category',
+      subtitle: 'category.title',
       media: 'image',
     },
   },

@@ -27,6 +27,19 @@ export const serviceType = defineType({
       type: 'text',
     },
     {
+      name: 'category',
+      title: 'Categoría',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      options: {
+        filter: 'section == $section',
+        filterParams: {
+          section: 'service',
+        },
+      },
+      description: 'Opcional. Crea categorías en "Contenido > Categorías".',
+    },
+    {
       name: 'icon',
       title: 'Icon Name (lucide-react)',
       type: 'string',
